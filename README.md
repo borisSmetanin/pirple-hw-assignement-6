@@ -1,6 +1,6 @@
 # pirple-hw-assignment-6
 
-This is part of my learning Node.js course in (Pirple)[https://pirple.thinkific.com/]
+This is part of my learning Node.js course in [Pirple](https://pirple.thinkific.com/)
 
 I have refactored the first hello-world assignment
 
