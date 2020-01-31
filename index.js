@@ -1,23 +1,23 @@
 // Require the http server
-var http = require('http');
+const http = require('http');
 
 // Require the string decoder
-var string_decoder = require('string_decoder').StringDecoder;
+const string_decoder = require('string_decoder').StringDecoder;
 
 // Require the url module
-var url = require('url');
+const url = require('url');
 
-// Handels the requests made to this server
-var requests_handeler = function(req, res) {
+// Handles the requests made to this server
+const requests_handler = (req, res) => {
     // Extract the url from the request
-    var parsed_url   = url.parse(req.url, true);
-    var trimmed_path = parsed_url.pathname.replace(/^\/+|\/+$/g, '');
+    const parsed_url   = url.parse(req.url, true);
+    const trimmed_path = parsed_url.pathname.replace(/^\/+|\/+$/g, '');
 
     // Get the current http method
-    var http_method = req.method.toLowerCase();
+    const http_method = req.method.toLowerCase();
 
     // Set default request method to not found
-    var requested_method = router.not_found;
+    let requested_method = router.not_found;
     
     // Check if correct request and HTTP method where given
     // If so - set route accordingly
@@ -28,7 +28,7 @@ var requests_handeler = function(req, res) {
     }
       
     // Execute the request according to the router
-    requested_method(function(status,payload){
+    requested_method((status, payload) => {
         // Set headers - alway return JSON response
         res.setHeader('Content-Type', 'application/json');
         res.writeHead(status);
@@ -38,11 +38,11 @@ var requests_handeler = function(req, res) {
     });
 }
 
-// Defind basic router- each route should be defined with specific HTTP methods
-var router = {
+// Define basic router- each route should be defined with specific HTTP methods
+const router = {
     hello: {
-        // Hndels GET /hello
-        get: function(callback){
+        // Handles GET /hello
+        get: (callback) => {
             callback(200, {
                 error: false,
                 message: null,
@@ -52,8 +52,8 @@ var router = {
             });
         },
 
-        // Hndels POST /hello
-        post:  function (callback) {
+        // Handles POST /hello
+        post:  (callback) => {
             callback(200, {
                 error: false,
                 message: null,
@@ -64,12 +64,12 @@ var router = {
         }
     },
 
-    // Default router - handels 404 response
-    not_found: function (callback) {
-        var allowed_requests = [];
-        Object.keys(router).forEach(function(allowd_nethod){
-            if (allowd_nethod != 'not_found') {
-                allowed_requests.push('"GET /' + allowd_nethod +'"');
+    // Default router - handles 404 response
+    not_found: (callback) => {
+        const allowed_requests = [];
+        Object.keys(router).forEach((allowed_method) => {
+            if (allowed_method != 'not_found') {
+                allowed_requests.push(`GET / ${allowed_method}`);
             }
         });
 
@@ -84,14 +84,13 @@ var router = {
 };
 
 // Create the server
-var httpServer = http.createServer(function(req, res){
-    // Handel what actions should the server do once http request is commited
-    requests_handeler(req, res);
+var httpServer = http.createServer((req, res) => {
+    // Handel what actions should the server do once http request is committed
+    requests_handler(req, res);
 });
 
 // Start the server - listens on port 3000, e.g http://localhost:3000/<routes>
-httpServer.listen(3000, function(){
-    // Write internl messgaes 
+httpServer.listen(3000, () => {
     console.log('Server is listening on port 3000');
 });
 
